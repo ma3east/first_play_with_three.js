@@ -23,20 +23,10 @@ function init() {
   // use images for the cube materials
   cubeImage1 = THREE.ImageUtils.loadTexture('images/GA.png');
   cubeImage2 = THREE.ImageUtils.loadTexture('images/js.png');
-  cubeImage3 = THREE.ImageUtils.loadTexture('images/braces.png');
+  cubeImage3 = THREE.ImageUtils.loadTexture('images/keep_calm.png');
   cubeImage4 = THREE.ImageUtils.loadTexture('images/HTML5CSS3.jpg');
   cubeImage5 = THREE.ImageUtils.loadTexture('images/Octocat.png');
   cubeImage6 = THREE.ImageUtils.loadTexture('images/Code.png');
-
-  // material = new THREE.MeshLambertMaterial({
-  //   map: cubeImage,
-  //   // color: 0x28c0ec, //0xff0000, 
-  //   specular: 0x009900, 
-  //   shininess: 30, 
-  //   shading: THREE.FlatShading
-  //   // map: cubeImage,
-  //   // side: THREE.DoubleSide
-  // });
 
   materials.push(new THREE.MeshLambertMaterial({ map: cubeImage1 })); // right face
   materials.push(new THREE.MeshLambertMaterial({ map: cubeImage2 })); // left face
@@ -53,16 +43,18 @@ function init() {
   cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 
-  // Add light
-  addLights();
-  
   // renderer
   renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true 
-    });
+    antialias: true,
+    alpha: true 
+  });
   renderer.setSize(width, height);
-  renderer.setClearColor(0xff0000, 1); //0x336699
+
+  // sets canvas color
+  renderer.setClearColor(0x000000, 0.5);
+
+  // Add light
+  addLights();
 
   document.body.appendChild(renderer.domElement);
 
@@ -71,17 +63,8 @@ function init() {
 }
 
 function addLights() {
-  var pointLight = new THREE.PointLight(0xffffff, 1, 100);
-  pointLight.position.set(50, 50, 50);
-  scene.add(pointLight);
-
-  // hemiLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-  // scene.add( hemiLight );
-
-  // var dLight = new THREE.DirectionalLight(0xFFFFFF, 1, 100);
-  // dLight.position.set(10, 1, 10);
-  // scene.add(dLight);
-
+  hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+  scene.add( hemiLight );
 }
 
 function render() {
@@ -89,8 +72,9 @@ function render() {
 }
 
 function animate() {
-  cube.rotation.x += 0.02;
+  cube.rotation.x -= 0.01;
   cube.rotation.y += 0.02;
+  cube.rotation.z += 0.01;
   render();
   requestAnimationFrame(animate);
 }
