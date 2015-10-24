@@ -1,32 +1,41 @@
 console.log('javascript is ready');
 
-var camera, scene, renderer, geometry, cube, material, cubeImage, hemiLight;
+var camera, 
+scene, 
+renderer, 
+geometry, 
+cube, 
+material, 
+cubeImage, 
+hemiLight;
 
 var width = window.innerWidth;
 var height = window.innerHeight;
+var materials = [];
 
 function init() {
   scene = new THREE.Scene();
-  // scene.add(camera);
-
+  
   // camera
   camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
   camera.position.z = 2000;
   
-  // use an image for the cube material
-  // cubeImage = new THREE.ImageUtils.loadTexture('images/GA.png');
+  // use images for the cube materials
+  cubeImage1 = THREE.ImageUtils.loadTexture('images/GA.png');
+  cubeImage2 = THREE.ImageUtils.loadTexture('images/js.png');
+  cubeImage3 = THREE.ImageUtils.loadTexture('images/keep_calm.png');
+  cubeImage4 = THREE.ImageUtils.loadTexture('images/HTML5CSS3.jpg');
+  cubeImage5 = THREE.ImageUtils.loadTexture('images/Octocat.png');
+  cubeImage6 = THREE.ImageUtils.loadTexture('images/Code.png');
 
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage1 })); // right face
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage2 })); // left face
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage3 })); // top face
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage4 })); // bottom face
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage5 })); // front face
+  materials.push(new THREE.MeshLambertMaterial({ map: cubeImage6 })); // back face
 
-  material = new THREE.MeshPhongMaterial({
-    color: 0xff0000, 
-    specular: 0x009900, 
-    shininess: 30, 
-    shading: THREE.FlatShading
-    // map: cubeImage,
-    // side: THREE.DoubleSide
-  });
-
-  // material.map.needsUpdate = true;
+  material = new THREE.MeshFaceMaterial(materials);
 
   //cube geometry
   geometry = new THREE.BoxGeometry(300, 300, 300);
@@ -34,46 +43,40 @@ function init() {
   cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 
-  // light
-  // hemiLight = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
-  // scene.add( hemiLight );
-
-
-  var pointLight = new THREE.PointLight(0xffffff, 1, 100);
-  // pointLight.position.set(50, 50, 50);
-  scene.add(pointLight);
-
-  // var dLight = new THREE.DirectionalLight(0xFFFFFF);
-  // dLight.position.set(0, 1, 0);
-  // scene.add(dLight);
-
-  pointLight.position.x = 10;
-  pointLight.position.y = 50;
-  pointLight.position.z = 1000;
-
-  // // scene.add(pointLight);
-
   // renderer
   renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true 
-    });
+    antialias: true,
+    alpha: true 
+  });
   renderer.setSize(width, height);
-  renderer.setClearColor(0x336699, 1)
+
+  // sets canvas color
+  renderer.setClearColor(0x000000, 0.5);
+
+  // Add light
+  addLights();
 
   document.body.appendChild(renderer.domElement);
 
+  THREEx.WindowResize(renderer, camera);
   animate();
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+function addLights() {
+  hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1 );
+  scene.add( hemiLight );
+}
 
-  cube.rotation.x += 0.02;
-  cube.rotation.y += 0.02;
-  
+function render() {
   renderer.render(scene, camera);
 }
 
-window.onload = init;
+function animate() {
+  cube.rotation.x -= 0.02;
+  cube.rotation.y += 0.01;
+  cube.rotation.z -= 0.01;
+  render();
+  requestAnimationFrame(animate);
+}
 
+window.onload = init;
